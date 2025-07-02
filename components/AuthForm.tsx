@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import Image from 'next/image'
 import Link from 'next/link'
+import { createAccount } from '@/lib/actions/user.action'
 const formSchema = z.object({
   username: z.string().min(2).max(50),
 })
@@ -32,7 +33,8 @@ const authFormSchema = (formType: FormType) =>{
 }
 const AuthForm = ({ type }: { type: FormType }) => {
 const [isLoading, setisLoading] = useState(false);
-const [errorMessage, seterrorMessage] = useState('')
+const [errorMessage, setErrorMessage] = useState('')
+const [accountID, setAccountID] = useState(null)
 const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,7 +44,21 @@ const formSchema = authFormSchema(type);
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+   setisLoading(true);
+   setErrorMessage("");
+
+   try {
+    const user = await createAccount({fullName : values.fullName || "", email:values.email});
+    setAccountID(user.accountId);
+   } catch(error) {
+    if (error instanceof Error) {
+    setErrorMessage(error.message);
+  } else {
+    setErrorMessage("Something went wrong");
+  }
+   } finally {
+    setisLoading(false);
+   }
   }
   return (
     <> <Form {...form}>
