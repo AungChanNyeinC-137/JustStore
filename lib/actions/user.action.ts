@@ -15,7 +15,6 @@ import { parseStringify } from "../utils";
 
 const getUserByEmail = async ({ email }: { email: string }) => {
     const { databases } = await createAdminClient();
-  console.log('adminClient created')
     const result = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.usersCollectionId,
