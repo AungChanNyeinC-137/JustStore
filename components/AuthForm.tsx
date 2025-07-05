@@ -47,11 +47,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setisLoading(true);
     setErrorMessage("");
-
     try {
       const user = await createAccount({ fullName: values.fullName || "", email: values.email });
       setAccountId(user.accountId);
     } catch (error) {
+      console.log(error)
       setErrorMessage("Failed to create an account. Please try again")
     } finally {
       setisLoading(false);

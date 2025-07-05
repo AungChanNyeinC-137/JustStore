@@ -29,20 +29,21 @@ const OTPModal = ({accountId, email}:{accountId:string; email: string}) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e : React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      //Call API to verify OTP
-      const sessionId = await verifySecret({accountId, password});
-      if(sessionId) router.push("/") //go straight to homepage
-
-    } catch (error) {
-      console.log('Failed to verify the OTP', error);
+const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  setIsLoading(true);
+  try {
+    const sessionId = await verifySecret({ accountId, password });
+    if (sessionId) {
+      router.push("/");
     }
+  } catch (error) {
+    console.error("Failed to verify the OTP", error);
+  } finally {
     setIsLoading(false);
   }
+}
+
 
   const handleResendOTP = async () => {
     await sendEmailOTP({email});
